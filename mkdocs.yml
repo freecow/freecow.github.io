@@ -1,7 +1,7 @@
 site_name: Jerry's Knowledge Base
-site_url: https://freecow.github.io/notes
-repo_url: https://github.com/freecow/notes
-repo_name: freecow/notes
+site_url: https://freecow.github.io
+repo_url: https://github.com/freecow/freecow.github.io
+repo_name: freecow/freecow.github.io
 
 theme:
   name: material
