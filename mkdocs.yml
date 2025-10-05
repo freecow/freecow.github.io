@@ -1,0 +1,78 @@
+site_name: Jerry's Knowledge Base
+site_url: https://freecow.github.io
+repo_url: https://github.com/freecow/notes
+repo_name: freecow/notes
+
+theme:
+  name: material
+  language: zh
+  features:
+    - content.code.copy       # 代码复制按钮
+    - navigation.top          # 返回顶部
+    - navigation.tracking     # URL 随滚动更新
+    - navigation.instant      # 即时导航
+    - navigation.tabs         # 一级导航 Tab
+    - navigation.sections     # 侧边栏分节
+    - toc.integrate           # 目录并入右栏
+    - search.highlight
+    - search.suggest
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang: [zh, en]
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+      type: timeago
+      locale: zh
+  - awesome-pages              # 依据目录结构自动导航（可用 .pages 调整顺序）
+  - glightbox                  # 图片灯箱
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/freecow
+
+# 不手写 nav，按目录结构自动生成导航（适合大量子目录）

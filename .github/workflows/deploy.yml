@@ -1,0 +1,24 @@
+name: Deploy MkDocs to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install mkdocs toolchain
+        run: |
+          pip install mkdocs-material \
+                      mkdocs-git-revision-date-localized-plugin \
+                      mkdocs-awesome-pages-plugin \
+                      mkdocs-glightbox \
+                      mkdocs-minify-plugin
+      - name: Build & Deploy
+        run: mkdocs gh-deploy --force
