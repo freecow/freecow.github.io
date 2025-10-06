@@ -1,6 +1,8 @@
 .venv/
 _site/
-.DS_Store
-Thumbs.db
+.cache/
 .mkdocs.pid
 logs/
+site/
+.DS_Store
+Thumbs.db
