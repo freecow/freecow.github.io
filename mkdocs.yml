@@ -13,7 +13,7 @@ theme:
     - navigation.instant      # 即时导航
     - navigation.tabs         # 一级导航 Tab
     - navigation.sections     # 侧边栏分节
-    - toc.integrate           # 目录并入右栏
+    # 保持右侧页内目录（不启用 toc.integrate）
     - search.highlight
     - search.suggest
     - content.tabs.link
@@ -41,6 +41,7 @@ plugins:
       fallback_to_build_date: true
       type: timeago
       locale: zh
+  - macros                      # 允许在 Markdown 中使用 Jinja 变量（用于显示创建/更新日期）
   - awesome-pages              # 依据目录结构自动导航（可用 .pages 调整顺序）
   - glightbox                  # 图片灯箱
   - minify:
@@ -76,3 +77,6 @@ extra:
       link: https://github.com/freecow
 
 # 不手写 nav，按目录结构自动生成导航（适合大量子目录）
+
+extra_css:
+  - css/extra.css              # 自定义样式：突出标题等
