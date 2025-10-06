@@ -1,0 +1,6 @@
+.venv/
+_site/
+.DS_Store
+Thumbs.db
+.mkdocs.pid
+logs/

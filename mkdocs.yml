@@ -5,80 +5,67 @@ repo_name: freecow/freecow.github.io
 
 theme:
   name: material
-  language: zh
+  custom_dir: overrides
   features:
-    - navigation.path         # 顶部面包屑（更快定位）
-    - navigation.tabs         # 一级导航 Tab
-    - navigation.sections     # 左侧分节
-    - navigation.tracking     # URL 随滚动更新
-    - navigation.instant      # 即时导航
-    - navigation.top          # 返回顶部
-    - navigation.indexes      # 目录 index 页面支持
-    - toc.follow              # 右侧目录跟随高亮
-    - content.code.copy       # 代码复制按钮
+    - navigation.path
+    - navigation.tabs
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.tracking
+    - navigation.top
+    - navigation.prune
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
     - search.highlight
-    - search.suggest
-    - content.tabs.link
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/weather-night
-        name: 切换到深色
-    - scheme: slate
+        icon: material/brightness-7
+        name: Dark Mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/weather-sunny
-        name: 切换到浅色
+        icon: material/brightness-4
+        name: Light Mode
+  font:
+    text: Noto Sans SC
+    code: JetBrains Mono
+  language: zh
   icon:
     repo: fontawesome/brands/github
-
+  favicon: static/favicon.png
 plugins:
-  - search:
-      lang: [zh, en]
-  - git-revision-date-localized:
-      enable_creation_date: true
-      fallback_to_build_date: true
-      type: timeago
-      locale: zh
-  - macros                      # 允许在 Markdown 中使用 Jinja 变量（用于显示创建/更新日期）
-  - awesome-pages              # 依据目录结构自动导航（可用 .pages 调整顺序）
-  - glightbox                  # 图片灯箱
-  - minify:
-      minify_html: true
-
+  - search
+  - tags
+  - social
+  - meta-descriptions
+  - blog:
+      blog_dir: 随笔
+      blog_toc: true
+      draft_on_serve: false
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - javascripts/extra.js
+extra_css:
+  - stylesheets/extra.css
+  - https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css
+copyright: Copyright &copy; 2025 GeniusX
 markdown_extensions:
   - admonition
-  - footnotes
-  - attr_list
-  - def_list
   - md_in_html
-  - toc:
-      permalink: true
   - pymdownx.highlight:
       anchor_linenums: true
-      linenums: true
-      use_pygments: true
-  - pymdownx.inlinehilite
   - pymdownx.superfences
-  - pymdownx.details
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.snippets:
-      check_paths: true
-  - pymdownx.critic
-  - pymdownx.caret
-  - pymdownx.mark
-  - pymdownx.tilde
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/freecow
-
-# 不手写 nav，按目录结构自动生成导航（适合大量子目录）
-
-extra_css:
-  - css/extra.css              # 自定义样式：突出标题等
+# 如果部署到子目录，需要设置
+site_dir: site
