@@ -17,4 +17,4 @@ date: 2025-10-6
 
 如有任何交流意向，或发现本站中有不当引用之处，欢迎随时通过邮箱联系我：**jerry.zhang@qq.com**。若有侵权行为，敬请谅解，我将及时删除相关内容。
 
-For any inquiries, collaborations, or concerns about content shared on this site, feel free to contact me at* ***jerry.zhang@qq.com\****. If any material inadvertently infringes on rights, please accept my apologies—I will promptly remove it upon notice.*
+For any inquiries, collaborations, or concerns about content shared on this site, feel free to contact me at jerry.zhang@qq.com. If any material inadvertently infringes on rights, please accept my apologies—I will promptly remove it upon notice.*
