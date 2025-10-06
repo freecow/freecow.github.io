@@ -7,13 +7,15 @@ theme:
   name: material
   language: zh
   features:
-    - content.code.copy       # 代码复制按钮
-    - navigation.top          # 返回顶部
+    - navigation.path         # 顶部面包屑（更快定位）
+    - navigation.tabs         # 一级导航 Tab
+    - navigation.sections     # 左侧分节
     - navigation.tracking     # URL 随滚动更新
     - navigation.instant      # 即时导航
-    - navigation.tabs         # 一级导航 Tab
-    - navigation.sections     # 侧边栏分节
-    # 保持右侧页内目录（不启用 toc.integrate）
+    - navigation.top          # 返回顶部
+    - navigation.indexes      # 目录 index 页面支持
+    - toc.follow              # 右侧目录跟随高亮
+    - content.code.copy       # 代码复制按钮
     - search.highlight
     - search.suggest
     - content.tabs.link
