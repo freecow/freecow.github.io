@@ -16,6 +16,8 @@ theme:
     - navigation.top
     - navigation.prune
     - toc.follow
+    - content.action.edit
+    - content.action.view
     - content.code.copy
     - content.code.annotate
     - search.highlight
