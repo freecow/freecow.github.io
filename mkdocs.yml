@@ -2,6 +2,8 @@ site_name: Jerry's Knowledge Base
 site_url: https://freecow.github.io
 repo_url: https://github.com/freecow/freecow.github.io
 repo_name: freecow/freecow.github.io
+edit_uri: edit/main/docs/
+strict: true
 
 theme:
   name: material
@@ -11,7 +13,6 @@ theme:
     - navigation.tabs
     - navigation.tracking
     - navigation.indexes
-    - navigation.tracking
     - navigation.top
     - navigation.prune
     - toc.follow
@@ -39,7 +40,7 @@ theme:
   language: zh
   icon:
     repo: fontawesome/brands/github
-  favicon: static/favicon.png
+  favicon: assets/favicon.png
 plugins:
   - search
   - tags
