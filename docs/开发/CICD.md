@@ -1,3 +1,10 @@
+---
+aliases: 
+tags: 
+date_modified: 
+date: 2025-10-6
+---
+
 ## 如何配置一次推送到多个仓库
 
 首先在局域网gitea和公网github上都创建好仓库

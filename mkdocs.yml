@@ -1,4 +1,4 @@
-site_name: Jerry's Knowledge Base
+site_name: Jerry's Notes
 site_url: https://freecow.github.io
 repo_url: https://github.com/freecow/freecow.github.io
 repo_name: freecow/freecow.github.io
@@ -48,10 +48,6 @@ plugins:
   - tags
   - social
   - meta-descriptions
-  - blog:
-      blog_dir: 随笔
-      blog_toc: true
-      draft_on_serve: false
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML
   - javascripts/extra.js
