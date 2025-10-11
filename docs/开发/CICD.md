@@ -48,7 +48,7 @@ git push origin --tags
 
 
 
-## 如何保留两个远程仓库
+## 如何保留两个远程仓库（推荐）
 
 参看当前远程仓库
 
@@ -56,27 +56,44 @@ git push origin --tags
 git remote -v
 ```
 
-添加Gitea远程仓库
+只让origin指向GitHub
+
+```
+git remote set-url origin https://github.com/freecow/mysql-sea-syncweb.git
+git remote set-url --push origin https://github.com/freecow/mysql-sea-syncweb.git
+```
+
+添加添加/校正Gitea远端
 
 ```bash
-git remote add gitea http://192.168.1.10:3000/你的用户名/mysql-sea-syncweb.git
+git remote add gitea http://192.168.1.10:3000/zhanghui/mysql-sea-syncweb.git
+git remote set-url --push gitea http://192.168.1.10:3000/zhanghui/mysql-sea-syncweb.git
+
+# 如果需要删除不合适的本地仓库指向
+git remote set-url --push origin --delete http://192.168.1.10:3000/zhanghui/mysql-sea-syncweb.git
+```
+
+验证
+
+```
+git remote -v
 
 # 现在有两个远程仓库：
 # origin -> GitHub
 # gitea -> Gitea
 ```
 
-测试推送
+分推送
 
 ```bash
 # 推送到GitHub
-git push origin main
+git push origin dev
 
 # 推送到Gitea
-git push gitea main
+git push gitea dev
 
-# 或同时推送到两个仓库
-git push origin main && git push gitea main
+# 设置默认push到GitHub
+git config remote.pushDefault origin
 ```
 
 
