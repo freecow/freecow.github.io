@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags: 
-date_modified: 
+date_modified: 2025-10-24
 date: 2025-10-7
 ---
 
@@ -197,8 +197,12 @@ ls -la executor_configs/
 # 从远程获取最新分支数据
 git fetch origin
 
-# 强制把当前分支重置为远程origin/main的状态，本地未提交修改会被清空
-git reset --hard origin/main
+# 强制把当前分支重置为远程origin/dev的状态，本地未提交修改会被清空
+git reset --hard origin/dev
+
+# 检查git status，如果本地还是有Untracked files
+# 如果希望放弃本地文件
+git clean -fd
 ```
 
 
@@ -236,3 +240,22 @@ git checkout dev
 # 可选：强制推送dev到远程
 git push origin dev --force
 ```
+
+## 修改Commit
+
+```bash
+## 如果还没有推送提交到远程仓库
+# 在编辑器中修改commit信息后再push
+git commit --amend
+
+## 如果已推送提交到远程仓库
+# 修改commit信息
+git commit --amend
+
+# 强制覆盖推送
+git push --force
+
+# 查看提交历史
+git log --oneline
+```
+
