@@ -5,13 +5,11 @@ date_modified:
 date: 2025-10-12
 ---
 
-## 说明
+# uv-macOS部署
 
-uv是Astral发布的高性能Python工具，Rust编写，用途是安装python包，以及解析包版本之间的依赖，最大特点是速度快，类似Rust的cargo
+本文档介绍如何在安装和使用 uv，uv是Astral发布的高性能Python工具，Rust编写，用途是安装python包，以及解析包版本之间的依赖，最大特点是速度快，类似Rust的cargo
 
 开源地址，https://github.com/astral-sh/uv
-
-
 
 ## 安装uv
 
@@ -19,15 +17,11 @@ uv是Astral发布的高性能Python工具，Rust编写，用途是安装python�
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-
-
 ## 升级uv
 
 ```Bash
 uv self update
 ```
-
-
 
 ## 创建uv虚拟环境
 
@@ -45,13 +39,11 @@ uv pip install -r requirements.txt
 uv pip sync requirements.txt
 
 # 验收虚拟环境
-which python3 && python3 -c "import flask, apscheduler; print('✅ 虚拟环境配置成功！')"
+which python3 && python3 -c "import flask, apscheduler; print('虚拟环境配置成功！')"
 
 # 退出虚拟环境
 deactivate
 ```
-
-
 
 ## 迁移conda环境至uv
 
@@ -174,8 +166,6 @@ uv pip list
 deactivate
 ```
 
-
-
 ## 导出环境包列表
 
 ```bash
@@ -192,8 +182,6 @@ source ~/.local/share/uv/envs/[ENV_NAME]/bin/activate
 uv pip install -r requirements.txt
 ```
 
-
-
 ## 优势对比
 
 | 特性     | Conda          | UV                  |
@@ -203,8 +191,6 @@ uv pip install -r requirements.txt
 | 全局激活 | 需要手动配置   | 自动支持            |
 | 命令执行 | conda activate | [ENV_NAME]          |
 | 直接运行 | 不支持         | 支持 [ENV_NAME] cmd |
-
-
 
 ## uv-pip国内源
 
@@ -220,8 +206,6 @@ export UV_DEFAULT_INDEX="https://mirrors.aliyun.com/pypi/simple/"
 # 测试是否起作用
 uv pip install -v requests
 ```
-
-
 
 ## uv-python国内源
 

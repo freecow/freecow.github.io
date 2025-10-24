@@ -1,11 +1,11 @@
 ---
 aliases: 
 tags: 
-date_modified: 
+date_modified: 2025-10-25
 date: 2025-10-22
 ---
 
-# macOS环境安装podman
+# Podman-macOS部署
 
 本文档介绍如何在 macOS 上安装和使用 Podman，取代传统的Docker环境。
 

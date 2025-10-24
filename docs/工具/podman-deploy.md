@@ -1,11 +1,11 @@
 ---
 aliases: 
 tags: 
-date_modified: 
+date_modified: 2025-10-25
 date: 2025-10-24
 ---
 
-# Podman 容器化部署指南 (Ubuntu)
+# Podman容器化部署
 
 本文档介绍如何在 Ubuntu 服务器上使用 Podman 和 podman-compose 部署完整的应用栈（PostgreSQL + 后端 + 前端）。
 
@@ -118,28 +118,114 @@ podman network ls
 - `plugins`: 仅包含 `bridge` 和 `portmap` 插件，移除了有问题的 `firewall` 插件
 - `subnet`: 使用 `10.88.0.0/16` 地址池
 
-### 4. 上传项目文件
+### 4. 上传启动文件
 
 ```bash
-# 在本地打包项目（排除不必要的文件）
-tar -czf sea-sync-deploy.tar.gz \
-  --exclude='node_modules' \
-  --exclude='.git' \
-  --exclude='*.pyc' \
-  --exclude='__pycache__' \
-  --exclude='configs/config.db*' \
-  --exclude='logs/*' \
-  .
+# podman-compose.yml
+version: "3.8"
 
-# 上传到服务器
-scp sea-sync-deploy.tar.gz user@server:/opt/
+services:
+  # PostgreSQL 数据库（与 docker-compose 保持一致，便于多机切换）
+  postgres:
+    image: uhub.service.ucloud.cn/baseimages/postgres:14-alpine
+    container_name: sea-sync-postgres
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sea_sync}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+      TZ: Asia/Shanghai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_postgres.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - -U
+        - postgres
+        - -d
+        - sea_sync
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-# SSH 到服务器并解压
-ssh user@server
-cd /opt/
-tar -xzf sea-sync-deploy.tar.gz
-mv mysql-sea-syncweb /opt/mysql-sea-syncweb
-cd /opt/mysql-sea-syncweb
+  # 后端服务
+  backend:
+    image: uhub.service.ucloud.cn/igalaxycn/mysql-sea-syncweb-backend:amd64-20251024
+    container_name: mysql-sea-sync-backend
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # 数据库连接（通过环境变量覆盖配置文件）
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-sea_sync}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+
+      # 应用配置
+      FLASK_ENV: production
+      TZ: Asia/Shanghai
+
+      # SeaTable 服务器
+      SEATABLE_SERVER_URL: ${SEATABLE_SERVER_URL:-https://cloud.seatable.cn}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # 新架构配置（统一放在 ./configs）
+      - ./configs:/app/configs
+      # 日志目录映射
+      - ./logs:/app/logs
+      # 导出及模板目录（统一）
+      - ./exports:/app/exports
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:15001/api/system/config
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 前端服务
+  frontend:
+    image: uhub.service.ucloud.cn/igalaxycn/mysql-sea-syncweb-frontend:amd64-20251024
+    container_name: mysql-sea-sync-frontend
+    restart: unless-stopped
+    networks:
+      - podman
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:80"
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:80
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    extra_hosts:
+      - "backend:172.17.0.1"
+
+networks:
+  podman:
+    external: true
+    name: podman
+
+volumes:
+  postgres_data:
+    driver: local
 ```
 
 ### 5. 配置环境变量
@@ -174,7 +260,7 @@ SEATABLE_SERVER_URL=https://cloud.seatable.cn
 
 ```bash
 # 拉取 PostgreSQL 镜像
-podman pull postgres:14-alpine
+podman pull uhub.service.ucloud.cn/baseimages/postgres:14-alpine
 
 # 拉取后端镜像
 podman pull uhub.service.ucloud.cn/igalaxycn/mysql-sea-syncweb-backend:amd64-20251024
@@ -257,13 +343,14 @@ podman network ls
 # 验证 frontend 使用的网络
 podman inspect mysql-sea-sync-frontend --format '{{range $k, $v := .NetworkSettings.Networks}}{{$k}}{{end}}'
 # 应该输出: podman
+
+# postgres和backend使用host网络，无需验证
 ```
 
 ### 9. 访问应用
 
 - 前端界面: `http://服务器IP:3000`
 - 后端 API: `http://服务器IP:15001`
-- 默认账号: `admin` / `admin123`
 
 ## 数据管理
 
@@ -281,9 +368,7 @@ podman volume inspect mysql-sea-syncweb_postgres_data
 
 ### 数据库备份与恢复
 
-项目提供了完整的数据库备份恢复工具，支持交互式和非交互式操作。
-
-快速示例:
+快速示例
 
 ```bash
 # 备份所有重要业务表
@@ -305,6 +390,7 @@ DOCKER_BIN=podman ./scripts/restore_postgres_direct.sh backups/schedules_backup_
 # 每天凌晨 2 点自动备份
 crontab -e
 # 添加以下行
+# 脚本自动生成schedules_backup_<date>.sql.gz
 0 2 * * * cd /opt/mysql-sea-syncweb && DOCKER_BIN=podman bash -c 'echo "0" | ./scripts/backup_postgres.sh' >> /var/log/sea-sync-backup.log 2>&1
 ```
 
@@ -484,7 +570,7 @@ sudo ufw allow 15001/tcp
 sudo ufw status
 ```
 
-### 3. 使用反向代理（推荐）
+### 3. 使用反向代理
 
 使用 Nginx 作为反向代理，配置 HTTPS：
 
@@ -540,10 +626,7 @@ sudo certbot --nginx -d your-domain.com
 WARN[0000] Error validating CNI config file /etc/cni/net.d/mysql-sea-syncweb_default.conflist: [plugin firewall does not support config version "1.0.0"]
 ```
 
-原因：
-- podman-compose 自动创建的默认网络包含 firewall 插件
-- Ubuntu Podman 3.4.4 的 firewall 插件不支持 CNI 1.0.0
-
+原因：podman-compose 自动创建的默认网络包含 firewall 插件；Ubuntu Podman 3.4.4 的 firewall 插件不支持 CNI 1.0.0
 解决方案：
 ```bash
 # 确认 podman-compose.yml 中已配置使用外部 podman 网络
@@ -635,6 +718,8 @@ EOF
 
 # 拉取验证
 podman pull node:18-alpine
+
+# 也可以做国内镜像同步，如uhub.service.ucloud.cn/baseimages/postgres:14-alpine
 ```
 
 ## 监控和维护
@@ -769,7 +854,6 @@ podman stats
 - Podman 官方文档: https://docs.podman.io/
 - podman-compose GitHub: https://github.com/containers/podman-compose
 - CNI 插件文档: https://www.cni.dev/docs/
-- 项目文档: `docs/DOCKER_DEPLOY.md`（Docker 部署参考）
 
 ## 更新日志
 
