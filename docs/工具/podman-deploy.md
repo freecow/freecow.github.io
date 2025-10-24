@@ -281,9 +281,7 @@ podman volume inspect mysql-sea-syncweb_postgres_data
 
 ### 数据库备份与恢复
 
-项目提供了完整的数据库备份恢复工具,支持交互式和非交互式操作。
-
-详细使用方法请参考: [scripts/database_backup_restore.md](../scripts/database_backup_restore.md)
+项目提供了完整的数据库备份恢复工具，支持交互式和非交互式操作。
 
 快速示例:
 
