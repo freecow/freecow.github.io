@@ -26,11 +26,11 @@ uv self update
 ## 创建uv虚拟环境
 
 ```Bash
-# 创建虚拟环境
-uv venv .venv
+# 创建uv环境到指定的目录内
+uv venv --python 3.11 ~/.local/share/uv/envs/[ENV_NAME]
 
 # 激活虚拟环境
-source .venv/bin/activate
+source ~/.local/share/uv/envs/[ENV_NAME]/bin/activate
 
 # 安装依赖
 uv pip install -r requirements.txt
@@ -53,20 +53,13 @@ deactivate
 ~/miniconda3/envs/[ENV_NAME]/bin/pip list --format=freeze > requirements.txt
 ```
 
-创建uv虚拟环境
+安装依赖包
 
 ```bash
 # 注释掉~/.zshrc中的conda初始化代码
 # 重新启动终端
 # 避免uv环境指向conda自动激活的运行程序
 
-# 创建uv环境到~/.local/share/uv/envs目录内
-uv venv --python 3.11 ~/.local/share/uv/envs/[ENV_NAME]
-```
-
-安装依赖包
-
-```bash
 # 设置国内源
 export UV_DEFAULT_INDEX="https://pypi.tuna.tsinghua.edu.cn/simple"
 
@@ -77,18 +70,14 @@ source ~/.local/share/uv/envs/[ENV_NAME]/bin/activate
 uv pip install -r requirements.txt
 ```
 
-创建本地bin目录
+## 创建全局激活与关闭脚本
 
 ```bash
 # 创建本地bin目录，确保bin目录在PATH中
 mkdir -p ~/.local/bin
-```
 
-创建全局激活与关闭脚本（脚本名同环境名）
 
-```bash
-# 先替换[ENV_NAME]
-# cat > ~/.local/bin/[ENV_NAME] << 'EOF'
+# 创建脚本，虚拟环境名称为sea
 cat > ~/.local/bin/sea << 'EOF'
 #!/bin/zsh
 
@@ -166,7 +155,7 @@ uv pip list
 deactivate
 ```
 
-## 导出环境包列表
+## 如何复制环境
 
 ```bash
 # 导出包列表
@@ -182,15 +171,19 @@ source ~/.local/share/uv/envs/[ENV_NAME]/bin/activate
 uv pip install -r requirements.txt
 ```
 
-## 优势对比
+## 如何更换uv环境的python版本
 
-| 特性     | Conda          | UV                  |
-| -------- | -------------- | ------------------- |
-| 安装速度 | 较慢           | 极快                |
-| 磁盘占用 | 较大           | 较小                |
-| 全局激活 | 需要手动配置   | 自动支持            |
-| 命令执行 | conda activate | [ENV_NAME]          |
-| 直接运行 | 不支持         | 支持 [ENV_NAME] cmd |
+```bash
+# uv无法删除虚拟环境中的版本，只能用新版本的python创建原环境
+# 先停用原环境
+deactivate
+
+# 删除原环境
+rm -rf ~/.local/share/uv/envs/llms
+
+# 创建新环境
+uv venv --python 3.11 ~/.local/share/uv/envs/llms
+```
 
 ## uv-pip国内源
 
